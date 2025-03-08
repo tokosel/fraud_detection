@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système de Détection de Fraude</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- Axios pour les requêtes HTTP -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div id="app" class="container mx-auto px-4 py-8">
+        <div class="bg-white shadow-lg rounded-lg p-6 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold text-center text-blue-600 mb-8">Système de Détection de Fraude</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Formulaire -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h2 class="text-xl font-semibold mb-4">Entrez les détails de la transaction</h2>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Catégorie</label>
+                        <input type="number" v-model.number="formData.Category" 
+                               class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Montant de la transaction</label>
+                        <input type="number" v-model.number="formData.TransactionAmount" step="0.01"
+                               class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Score d'anomalie</label>
+                        <input type="number" v-model.number="formData.AnomalyScore" min="0" max="1"
+                               class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Montant</label>
+                        <input type="number" v-model.number="formData.Amount" step="0.01"
+                               class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Solde du compte</label>
+                        <input type="number" v-model.number="formData.AccountBalance" step="0.01"
+                               class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Indicateur suspect</label>
+                        <select v-model.number="formData.SuspiciousFlag" 
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="0">Non</option>
+                            <option value="1">Oui</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Heure (0-23)</label>
+                        <input type="number" v-model.number="formData.Hour" min="0" max="23"
+                               class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Écart (gap)</label>
+                        <input type="number" v-model.number="formData.gap"
+                               class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <button @click="predict" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                        Analyser la transaction
+                    </button>
+                </div>
+                
+                <!-- Résultats -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h2 class="text-xl font-semibold mb-4">Résultat de l'analyse</h2>
+                    
+                    <div v-if="loading" class="text-center py-8">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                        <p class="mt-4 text-gray-600">Analyse en cours...</p>
+                    </div>
+                    
+                    <div v-else-if="result" class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-center mb-6">
+                            <div :class="[
+                                'inline-flex items-center justify-center w-16 h-16 rounded-full',
+                                result.prediction === 1 ? 'bg-red-100' : 'bg-green-100'
+                            ]">
+                                <span :class="[
+                                    'text-2xl',
+                                    result.prediction === 1 ? 'text-red-500' : 'text-green-500'
+                                ]">
+                                    <template v-if="result.prediction === 1">⚠️</template>
+                                    <template v-else>✓</template>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-center mb-2" 
+                            :class="result.prediction === 1 ? 'text-red-600' : 'text-green-600'">
+                            {{ result.label }}
+                        </h3>
+                        
+                        <p class="mt-4 text-sm text-gray-600">
+                            <span class="font-medium">Interprétation:</span>
+                            <template v-if="result.prediction === 1">
+                                Cette transaction présente des caractéristiques suspectes et a été classée comme une fraude potentielle.
+                            </template>
+                            <template v-else>
+                                Cette transaction semble légitime et aucun indicateur de fraude n'a été détecté.
+                            </template>
+                        </p>
+                    </div>
+                    
+                    <div v-else class="bg-gray-200 p-6 rounded-lg border border-dashed border-gray-400 text-center">
+                        <p class="text-gray-600">Complétez le formulaire et cliquez sur "Analyser la transaction" pour obtenir une prédiction.</p>
+                    </div>
+                    
+                    <div v-if="error" class="mt-4 p-3 bg-red-100 text-red-700 rounded-md">
+                        {{ error }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                formData: {
+                    Category: 3,
+                    TransactionAmount: 9456.41,
+                    AnomalyScore: 1,
+                    Amount: 55.53,
+                    AccountBalance: 2869.69,
+                    SuspiciousFlag: 0,
+                    Hour: 0,
+                    gap: 4567
+                },
+                result: null,
+                loading: false,
+                error: null
+            },
+            methods: {
+                predict() {
+                    this.loading = true;
+                    this.error = null;
+                    
+                    // Utilisez le chemin complet de l'URL avec /predict
+                    axios.post('/predict', this.formData)
+                        .then(response => {
+                            this.result = response.data;
+                        })
+                        .catch(error => {
+                            this.error = "Erreur lors de l'analyse: " + (error.response?.data?.error || error.message);
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        });
+                },
+                getColorClass(probability) {
+                    if (probability < 0.3) return 'bg-green-500';
+                    if (probability < 0.7) return 'bg-yellow-500';
+                    return 'bg-red-500';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
