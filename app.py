@@ -20,7 +20,6 @@ columns = ['Category', 'TransactionAmount', 'AnomalyScore', 'Amount',
 @app.route('/')
 def index():
     """Afficher la page d'accueil"""
-    # Passer result=None pour que le template puisse gérer le cas où result n'existe pas
     return render_template('index.html', result=None)
 
 @app.route('/predict', methods=['POST'])

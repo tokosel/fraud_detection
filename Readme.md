@@ -28,14 +28,4 @@ Le jeu de données est organisé dans le dossier **`data`** et comprend plusieur
 - **`transaction_category_labels.csv`** : Fournit des catégories pour différents types de transactions.  
 
 ### 📂 `src`  
-- **`data.py`** : Fichier Python contenant le code permettant de générer le jeu de données à partir de données réelles.  
-
-## 💡 Utilisation  
-Ce jeu de données peut être utilisé à diverses fins, notamment :  
-✅ Développement et évaluation de modèles de machine learning pour la détection de fraude.  
-✅ Recherche sur les algorithmes et techniques de détection de fraude.  
-✅ Formation des analystes et des data scientists aux méthodologies de détection de fraude.  
-
-N’hésitez pas à utiliser ce jeu de données dans vos projets, expériences ou recherches. Vous êtes encouragés à créer des notebooks ou d’autres outils d’analyse pour explorer et visualiser les données.  
-
-Si vous trouvez ce jeu de données utile, pensez à lui attribuer un vote positif pour montrer votre soutien. 🚀  
+- **`data.py`** : Fichier Python contenant le code permettant de générer le jeu de données à partir de données réelles. 
