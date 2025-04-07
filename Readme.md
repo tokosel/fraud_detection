@@ -1,31 +1,79 @@
-# Jeu de Données pour la Détection de Fraude  
+# Projet de Détection de Fraude
 
-## 🔒 Description du Jeu de Données  
-Le jeu de données sur la détection des fraudes financières contient des informations relatives aux transactions financières et aux schémas frauduleux. Il est conçu pour entraîner et évaluer des modèles de machine learning dédiés à la détection de fraude.  
+Ce projet implémente un système de détection de fraude basé sur des techniques de machine learning.
 
-## 📁 Structure du Jeu de Données  
-Le jeu de données est organisé dans le dossier **`data`** et comprend plusieurs sous-dossiers contenant des fichiers CSV spécifiques aux transactions financières, aux profils clients, aux schémas frauduleux, aux montants des transactions et aux informations sur les commerçants.  
+## Structure du Projet
 
-### 📂 `data`  
-#### 📂 Données des Transactions  
-- **`transaction_records.csv`** : Contient les enregistrements de transactions avec des détails tels que l’ID de la transaction, la date, le montant et l’ID du client.  
-- **`transaction_metadata.csv`** : Contient des métadonnées supplémentaires pour chaque transaction.  
+```
+ML/
+├── Data/                      # Dossier contenant les jeux de données
+├── env/                       # Environnement virtuel Python
+├── templates/                 # Templates pour l'interface web
+│   └── index.html             # Page principale de l'interface
+├── .gitignore                 # Configuration des fichiers à ignorer par Git
+├── app.py                     # Application principale (probablement Flask ou Streamlit)
+├── fraud_detection.pkl        # Modèle de détection de fraude sérialisé
+├── fraud-detection.ipynb      # Notebook Jupyter pour l'exploration et le développement
+├── Rapport_détection_de_fraude.pdf  # Documentation détaillée du projet
+├── README.md                  # Ce fichier
+└── requirements.txt           # Dépendances Python requises
+```
 
-#### 📂 Profils Clients  
-- **`customer_data.csv`** : Comprend les profils des clients avec des informations telles que le nom, l’âge, l’adresse et les coordonnées.  
-- **`account_activity.csv`** : Fournit des détails sur l’activité des comptes clients, y compris le solde, l’historique des transactions et le statut du compte.  
+## Description
 
-#### 📂 Schémas Frauduleux  
-- **`fraud_indicators.csv`** : Contient des indicateurs de fraude et des activités suspectes.  
-- **`suspicious_activity.csv`** : Fournit des détails spécifiques sur les transactions signalées comme suspectes.  
+Ce projet vise à détecter des activités frauduleuses à l'aide de techniques d'apprentissage automatique. Il comprend à la fois le développement du modèle (dans le notebook Jupyter) et une application web pour utiliser le modèle (via app.py).
 
-#### 📂 Montants des Transactions  
-- **`amount_data.csv`** : Contient les montants des transactions pour chaque opération.  
-- **`anomaly_scores.csv`** : Fournit des scores d’anomalie pour les montants des transactions, indiquant un risque potentiel de fraude.  
+## Installation
 
-#### 📂 Informations sur les Commerçants  
-- **`merchant_data.csv`** : Contient des informations sur les commerçants impliqués dans les transactions.  
-- **`transaction_category_labels.csv`** : Fournit des catégories pour différents types de transactions.  
+1. Clonez ce dépôt :
+```bash
+git clone https://github.com/votre-username/projet-detection-fraude.git
+cd projet-detection-fraude
+```
 
-### 📂 `src`  
-- **`data.py`** : Fichier Python contenant le code permettant de générer le jeu de données à partir de données réelles. 
+2. Créez et activez un environnement virtuel (optionnel mais recommandé) :
+```bash
+python -m venv env
+# Sur Windows
+env\Scripts\activate
+# Sur macOS/Linux
+source env/bin/activate
+```
+
+3. Installez les dépendances :
+```bash
+pip install -r requirements.txt
+```
+
+## Utilisation
+
+### Exécution de l'application web
+```bash
+python app.py
+```
+Accédez ensuite à l'application dans votre navigateur (généralement à l'adresse http://localhost:5000 ou celle indiquée dans la console).
+
+### Exploration des données et du modèle
+Vous pouvez explorer le processus de création du modèle en ouvrant le notebook Jupyter :
+```bash
+jupyter notebook fraud-detection.ipynb
+```
+
+## Documentation
+
+Pour une documentation complète du projet, consultez le fichier `Rapport_détection_de_fraude.pdf`.
+
+## Fonctionnalités
+
+- Prétraitement des données financières
+- Modèles de machine learning pour la détection d'anomalies
+- Interface web pour l'analyse en temps réel
+- Visualisation des résultats et des métriques de performance
+
+## Technologies Utilisées
+
+- Python
+- Scikit-learn
+- Flask / Vue JS / Html & tailwindcss
+- Pandas, NumPy
+- Matplotlib / Seaborn pour la visualisation
