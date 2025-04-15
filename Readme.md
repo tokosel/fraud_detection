@@ -27,8 +27,8 @@ Ce projet vise à détecter des activités frauduleuses à l'aide de techniques 
 
 1. Clonez ce dépôt :
 ```bash
-git clone https://github.com/votre-username/projet-detection-fraude.git
-cd projet-detection-fraude
+git clone https://github.com/tokosel/fraud_detection
+cd fraud_detection
 ```
 
 2. Créez et activez un environnement virtuel (optionnel mais recommandé) :
